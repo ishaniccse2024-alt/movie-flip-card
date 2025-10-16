@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Flip Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+            background: linear-gradient(135deg, #9eabe4 0%, #b792dc 100%);
+            padding: 10px;
+        }
+
+        .card-container {
+            perspective: 900px;
+            width: 350px;
+            height: 500px;
+        }
+
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.7s;
+            cursor: pointer;
+        }
+
+        .card-container:hover .flip-card {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .card-front {
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.9) 100%), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 520"><rect fill="%23222" width="350" height="520"/></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .poster-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e93f2c 0%, #b92b1b 100%);
+            font-size: 80px;
+            color: white;
+        }
+
+        .movie-info {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+        }
+
+        .movie-title {
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .movie-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #d0d0d0;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #f39c12;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .year {
+            font-weight: 500;
+        }
+
+        .duration {
+            font-weight: 500;
+        }
+
+        .genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .genre-tag {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            transform: rotateY(180deg);
+            padding: 30px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .back-title {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #f39c12;
+        }
+
+        .synopsis {
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #ddd;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .streaming-section {
+            margin-bottom: 20px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #bbb;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .streaming-platforms {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .platform-btn {
+            flex: 1;
+            min-width: 90px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .platform-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #f39c12;
+            transform: translateY(-2px);
+        }
+
+        .platform-btn.netflix {
+            border-color: #e50914;
+        }
+
+        .platform-btn.netflix:hover {
+            background: #e50914;
+            border-color: #e50914;
+        }
+
+        .platform-btn.prime {
+            border-color: #00a8e1;
+        }
+
+        .platform-btn.prime:hover {
+            background: #00a8e1;
+            border-color: #00a8e1;
+        }
+
+        .platform-btn.hotstar {
+            border-color: #ba0a76;
+        }
+
+        .platform-btn.hotstar:hover {
+            background: #ba0a76;
+            border-color: #ba0a76;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .watch-btn {
+            background: #f39c12;
+            color: #000;
+        }
+
+        .watch-btn:hover {
+            background: #e67e22;
+            transform: scale(1.05);
+        }
+
+        .trailer-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .trailer-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: white;
+        }
+
+        .star {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="flip-card">
+            <div class="card-face card-front">
+                <div class="poster-area">
+                    🎬
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">Interstellar</div>
+                    <div class="movie-meta">
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span>8.8</span>
+                        </div>
+                        <span class="year">2010</span>
+                        <span class="duration">2h 47m 7s</span>
+                    </div>
+                    <div class="genres">
+                        <span class="genre-tag">Sci-Fi</span>
+                        <span class="genre-tag">Action</span>
+                        <span class="genre-tag">Thriller</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-face card-back">
+                <div class="back-title">About The Movie</div>
+                <div class="synopsis">
+                    When Earth becomes uninhabitable in the near future, a team of astronauts travels through a wormhole in search of a new home for humanity.
+                    <br><br>
+                    Directed by Christopher Nolan and starring Matthew McConaughey as lead actor, this mind-bending thriller takes you through multiple layers of dreams within dreams.
+                </div>
+                
+                <div class="streaming-section">
+                    <div class="section-label">Available on</div>
+                    <div class="streaming-platforms">
+                        <a class="platform-btn netflix" href="https://www.netflix.com/title/70305903" target="_blank">Netflix</a>
+                        <a class="platform-btn prime" href="https://www.primevideo.com/detail/0N4Q9QJQKQKQKQKQKQKQ" target="_blank">Prime Video</a>
+                        <a class="platform-btn hotstar" href="https://www.hotstar.com/interstellar" target="_blank">JIO Hotstar</a>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a class="action-btn watch-btn" href="https://www.netflix.com/title/70305903" target="_blank">Watch Now</a>
+                    <a class="action-btn trailer-btn" href="https://www.youtube.com/watch?v=zSWdZVtXT7E" target="_blank">Trailer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const platformBtns = document.querySelectorAll('.platform-btn');
+        const watchBtn = document.querySelector('.watch-btn');
+        const trailerBtn = document.querySelector('.trailer-btn');
+
+        platformBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const platform = btn.textContent;
+                alert(`Opening ${platform}...`);
+            });
+        });
+
+        watchBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            alert('Opening streaming service...');
+        });
+
+        trailerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            alert('Opening the trailer...');
+        });
+    </script>
+</body>
+</html>
